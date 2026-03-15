@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dungeon Loot Splitter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header class="page-header">
+    <h1>Dungeon Loot Splitter</h1>
+    
+</header>
+
+<main class="page-main">
+
+   <!-- Input panel for adding loot + setting party size -->
+    <section class="panel panel-input">
+        <h2>Add Loot</h2>
+
+        <!-- Loot name -->
+        <div class="field">
+            <label for="lootName">Item name</label>
+            <input id="lootName" type="text" placeholder="Magic sword">
+        </div>
+
+        <!-- Loot value -->
+        <div class="field">
+            <label for="lootValue">Value (gold)</label>
+            <input id="lootValue" type="number" min="0" step="0.01" placeholder="100">
+        </div>
+
+        <!-- Loot quantity -->
+        <div class="field">
+            <label for="lootQuantity">Quantity</label>
+            <input id="lootQuantity" type="number" min="1" step="1" value="1">
+        </div>
+
+        <!-- Add loot button triggers addLoot() -->
+        <button id="addLootBtn" type="button">Add loot</button>
+        <button id="resetBtn" type="button">Reset</button>
+
+        <hr>
+
+        <!-- Party size input -->
+        <h2>Party size</h2>
+        <div class="field">
+            <label for="partySize">Number of party members</label>
+            <input id="partySize" type="number" min="1" step="1" value="1">
+        </div>
+
+        <!-- Error messages appear here -->
+        <p id="errorMessage" class="error hidden"></p>
+    </section>
+
+
+   <!-- Loot list panel -->
+    <section class="panel panel-loot">
+        <h2>Loot list</h2>
+
+        <!-- Shown when loot array is empty -->
+       
+
+        <!-- Loot table header -->
+        <div class="loot-table">
+            <div class="loot-header">
+                <div class="loot-cell">Item:</div>
+                <div class="loot-cell">Value:</div>
+                <div class="loot-cell">Quantity:</div>
+                <div class="loot-cell"></div>
+            </div>
+
+
+ <p id="noLootMessage" class="muted">No loot added yet. Add some items to get started.</p>
+
+            <!-- JS inserts rows here -->
+            <div id="lootRows"></div>
+        </div>
+    </section>
+
+
+    <!-- Results -->
+    <section class="panel panel-results">
+        <h2>Split results</h2>
+
+        <!-- Hidden until updateUI() reveals it -->
+        <div id="resultsPanel" class="results hidden">
+            <p><span class="label">Total loot value:</span>
+                <span id="totalLoot">0.00</span> gold</p>
+
+            <p><span class="label">Per party member:</span>
+                <span id="lootPerMember">0.00</span> gold</p>
+        </div>
+
+      
+    </section>
+
+</main>
+<footer>
+    <p><strong>How state is saved &amp; restored:</strong> The app keeps its current loot list and party size in JavaScript variables. Whenever those values change, the app calls a function that converts the state to a string and writes it into <code>localStorage</code>. On page load, the app reads that string back from <code>localStorage</code>, converts it back into JavaScript objects, and uses those values as the starting state.</p>
+
+    <p><strong>Why <code>updateUI()</code> must run after restoration:</strong> The UI is rendered from the in-memory state variables. If the DOM is updated before restoring saved state, the screen will show the default (empty) view even though the app later updates its internal state. Running <code>updateUI()</code> after restoration guarantees the displayed list, totals, and party size match the restored state.</p>
+
+    <p><strong>What <code>JSON.stringify()</code> and <code>JSON.parse()</code> do:</strong> <code>JSON.stringify()</code> turns JavaScript values into a JSON string so it can be stored as text in <code>localStorage</code>. <code>JSON.parse()</code> takes that string and rebuilds JavaScript objects and arrays from it. Together they let the application persist structured data across reloads.</p>
+
+    <p><strong>What we observe when stepping through restoration:</strong> When you set breakpoints in the restoration logic, you can see the app read raw text from <code>localStorage</code>, convert it with <code>JSON.parse()</code>, validate the shape of the data, and then assign it into the running variables. The next line usually calls <code>updateUI()</code>, and you can then see the DOM update to reflect the restored state.</p>
+
+    <p><strong>How this supports the course outcomes:</strong> This phase demonstrates the difference between transient runtime state and persistent storage, and it shows how an app can manage its lifecycle without losing user data. It also reinforces good practices like validating loaded state and keeping UI rendering separate from storage logic.</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
